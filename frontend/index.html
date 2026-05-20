@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Aurora Trade Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="topbar glass">
+        <div class="brand">
+          <span class="brand-mark"></span>
+          Aurora Trade
+        </div>
+        <nav class="nav">
+          <a class="nav-link" href="#">Overview</a>
+          <a class="nav-link" href="#">Strategy</a>
+          <a class="nav-link" href="#">Insights</a>
+          <a class="nav-link" href="#">Settings</a>
+        </nav>
+        <button class="btn primary">Connect Broker</button>
+      </header>
+
+      <main class="content">
+        <section class="hero">
+          <div class="hero-copy">
+            <p class="badge">Live Portfolio</p>
+            <h1>Trade with clarity in a premium, real-time cockpit.</h1>
+            <p class="muted">
+              Track balance, positions, and momentum signals in a streamlined dark interface
+              designed for active trading.
+            </p>
+            <div class="hero-actions">
+              <button class="btn primary">Start Session</button>
+              <button class="btn ghost">View Reports</button>
+            </div>
+          </div>
+          <div class="hero-card glass">
+            <h3>Performance Snapshot</h3>
+            <div class="hero-metric">
+              <span>Equity</span>
+              <strong>$124,560.20</strong>
+            </div>
+            <div class="hero-metric">
+              <span>Today’s P/L</span>
+              <strong class="positive">+$1,284.90</strong>
+            </div>
+            <div class="hero-metric">
+              <span>Open Positions</span>
+              <strong>4</strong>
+            </div>
+            <button class="btn outline">Export Summary</button>
+          </div>
+        </section>
+
+        <section class="stat-grid">
+          <div class="card glass">
+            <p class="card-title">Starting Balance</p>
+            <h2>$100,000.00</h2>
+            <p class="muted">Capital committed to strategy</p>
+          </div>
+          <div class="card glass">
+            <p class="card-title">Current Equity</p>
+            <h2>$124,560.20</h2>
+            <p class="muted">Includes open positions</p>
+          </div>
+          <div class="card glass">
+            <p class="card-title">Total Profit</p>
+            <h2 class="positive">$24,560.20</h2>
+            <p class="muted">+24.56% all-time return</p>
+          </div>
+        </section>
+
+        <section class="panel-grid">
+          <div class="card glass chart-card">
+            <div class="card-header">
+              <h3>Market Pulse</h3>
+              <div class="chip-group">
+                <button class="chip active">AAPL</button>
+                <button class="chip">BTC/USD</button>
+              </div>
+            </div>
+            <div class="chart-canvas">
+              <div class="chart-wave"></div>
+              <p>EMA crossover view updates every 20s</p>
+            </div>
+          </div>
+
+          <div class="card glass quick-card">
+            <h3>Quick Action</h3>
+            <p class="muted">Set a new alert or place a watchlist note.</p>
+            <label class="field">
+              <span>Symbol</span>
+              <input class="input" type="text" value="AAPL" />
+            </label>
+            <label class="field">
+              <span>Alert price</span>
+              <input class="input" type="text" value="$210.00" />
+            </label>
+            <button class="btn primary full">Create Alert</button>
+          </div>
+        </section>
+
+        <section class="card glass positions">
+          <div class="card-header">
+            <h3>Active Positions</h3>
+            <button class="btn ghost small">View all</button>
+          </div>
+          <div class="table">
+            <div class="table-row table-head">
+              <span>Symbol</span>
+              <span>Qty</span>
+              <span>Avg Entry</span>
+              <span>Market Value</span>
+              <span>Unrealized P/L</span>
+            </div>
+            <div class="table-row">
+              <span>AAPL</span>
+              <span>12</span>
+              <span>$197.20</span>
+              <span>$2,512.80</span>
+              <span class="positive">+$148.20</span>
+            </div>
+            <div class="table-row">
+              <span>BTC/USD</span>
+              <span>0.18</span>
+              <span>$63,850.00</span>
+              <span>$11,493.00</span>
+              <span class="positive">+$624.10</span>
+            </div>
+            <div class="table-row">
+              <span>NVDA</span>
+              <span>6</span>
+              <span>$890.40</span>
+              <span>$5,364.00</span>
+              <span class="negative">-$72.30</span>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p>Automated strategy monitoring · Secure websocket updates · Real-time analytics</p>
+      </footer>
+    </div>
+  </body>
+</html>
