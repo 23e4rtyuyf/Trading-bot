@@ -36,7 +36,9 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const wsBase = apiBase.replace(/^http/, "ws");
+    const wsBase = apiBase.startsWith("https://")
+      ? apiBase.replace("https://", "wss://")
+      : apiBase.replace("http://", "ws://");
     const ws = new WebSocket(`${wsBase}/ws`);
     ws.onmessage = (event) => {
       const payload = JSON.parse(event.data);

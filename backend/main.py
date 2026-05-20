@@ -35,7 +35,7 @@ class TradingState:
 
 class SQLiteStore:
     def __init__(self, path: str) -> None:
-        self.conn = sqlite3.connect(path, check_same_thread=False)
+        self.conn = sqlite3.connect(path)
         self.lock = asyncio.Lock()
         self._init_schema()
 
