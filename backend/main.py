@@ -1,6 +1,7 @@
 import asyncio
 import os
 import sqlite3
+from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from typing import Any
 
@@ -225,8 +226,23 @@ state = TradingState()
 store = SQLiteStore("trading.db")
 alpaca = AlpacaPaperClient()
 manager = ConnectionManager()
-app = FastAPI(title="Alpaca Paper Trading Platform")
 engine_task: asyncio.Task | None = None
+
+
+@asynccontextmanager
+async def app_lifespan(_: FastAPI):
+    global engine_task
+    if engine_task is None:
+        engine_task = asyncio.create_task(engine_loop())
+    try:
+        yield
+    finally:
+        if engine_task:
+            engine_task.cancel()
+        await alpaca.close()
+
+
+app = FastAPI(title="Alpaca Paper Trading Platform", lifespan=app_lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -287,21 +303,6 @@ async def engine_loop() -> None:
             }
         )
         await asyncio.sleep(POLL_INTERVAL_SECONDS)
-
-
-@app.on_event("startup")
-async def startup_event() -> None:
-    global engine_task
-    if engine_task is None:
-        engine_task = asyncio.create_task(engine_loop())
-
-
-@app.on_event("shutdown")
-async def shutdown_event() -> None:
-    global engine_task
-    if engine_task:
-        engine_task.cancel()
-    await alpaca.close()
 
 
 @app.get("/api/summary")
