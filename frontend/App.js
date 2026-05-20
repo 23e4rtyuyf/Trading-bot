@@ -28,15 +28,15 @@ function App() {
     fetch(`${apiBase}/api/summary`)
       .then((res) => res.json())
       .then(setSummary)
-      .catch(() => {});
+      .catch((error) => console.error("Failed to load summary", error));
     fetch(`${apiBase}/api/positions`)
       .then((res) => res.json())
       .then(setPositions)
-      .catch(() => {});
+      .catch((error) => console.error("Failed to load positions", error));
   }, []);
 
   useEffect(() => {
-    const wsBase = apiBase.replace("http", "ws");
+    const wsBase = apiBase.replace(/^http/, "ws");
     const ws = new WebSocket(`${wsBase}/ws`);
     ws.onmessage = (event) => {
       const payload = JSON.parse(event.data);

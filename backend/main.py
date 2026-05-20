@@ -14,11 +14,16 @@ from fastapi.middleware.cors import CORSMiddleware
 DATA_URL = "https://data.alpaca.markets"
 TRADING_URL = "https://paper-api.alpaca.markets"
 TRACKED_SYMBOLS = ["AAPL", "BTC/USD"]
+POLL_INTERVAL_SECONDS = 20
+AAPL_ORDER_QTY = float(os.getenv("AAPL_ORDER_QTY", "1"))
+BTC_ORDER_QTY = float(os.getenv("BTC_ORDER_QTY", "0.001"))
+CORS_ORIGINS = [origin.strip() for origin in os.getenv("CORS_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",") if origin.strip()]
 
 
 class TradingState:
     def __init__(self) -> None:
         self.starting_balance = 100000.0
+        self.starting_balance_initialized = False
         self.current_equity = 100000.0
         self.total_pnl = 0.0
         self.positions: list[dict[str, Any]] = []
@@ -225,7 +230,7 @@ engine_task: asyncio.Task | None = None
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -235,7 +240,7 @@ app.add_middleware(
 async def execute_strategy(symbol: str, signal: str, price: float) -> None:
     if state.last_signal[symbol] == signal:
         return
-    qty = 1.0 if symbol == "AAPL" else 0.001
+    qty = AAPL_ORDER_QTY if symbol == "AAPL" else BTC_ORDER_QTY
     await alpaca.place_market_order(symbol=symbol, side=signal, qty=qty)
     await store.add_trade(symbol=symbol, side=signal, qty=qty, price=price, reason="ema_8_21_crossover")
     state.last_signal[symbol] = signal
@@ -262,7 +267,9 @@ async def engine_loop() -> None:
         account = await alpaca.get_account()
         if account:
             state.current_equity = float(account.get("equity", state.current_equity))
-            state.starting_balance = float(account.get("last_equity", state.starting_balance))
+            if not state.starting_balance_initialized:
+                state.starting_balance = state.current_equity
+                state.starting_balance_initialized = True
             state.total_pnl = state.current_equity - state.starting_balance
         state.positions = await alpaca.get_positions()
         await store.add_equity(state.current_equity)
@@ -279,7 +286,7 @@ async def engine_loop() -> None:
                 "candles": state.candles,
             }
         )
-        await asyncio.sleep(20)
+        await asyncio.sleep(POLL_INTERVAL_SECONDS)
 
 
 @app.on_event("startup")
